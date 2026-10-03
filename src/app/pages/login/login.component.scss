@@ -1,0 +1,179 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    #667eea 0%,
+    #764ba2 100%
+  );
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.18),
+    0 5px 15px rgba(0, 0, 0, 0.08);
+  animation: card-appear 0.5s ease-out;
+}
+
+// Header
+mat-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  margin-bottom: 1.5rem;
+}
+
+mat-card-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+
+  color: #2d3748;
+
+  margin-bottom: 0.5rem;
+}
+
+mat-card-subtitle {
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+// Form
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+// Inputs
+
+mat-form-field {
+  width: 100%;
+}
+
+// Couleur du texte des labels
+::ng-deep .mat-mdc-form-field {
+  --mdc-outlined-text-field-focus-outline-color: #667eea;
+  --mdc-outlined-text-field-focus-label-text-color: #667eea;
+  --mdc-outlined-text-field-hover-outline-color: #764ba2;
+}
+
+::ng-deep .mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  border: 1px solid transparent;
+  border-radius: 12px !important;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, #667eea, #764ba2) border-box;
+}
+
+::ng-deep .mat-mdc-form-field .mdc-notched-outline {
+  display: none;
+}
+
+::ng-deep .mat-mdc-form-field .mdc-floating-label {
+  padding-inline: 4px;
+  background-color: #fff;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.25);
+}
+
+// Error
+
+.form-error {
+  color: #d32f2f;
+  background: #fff1f1;
+  border-left: 4px solid #d32f2f;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  margin: 0.25rem 0;
+}
+
+// Submit button
+
+.submit-btn {
+  height: 50px;
+  margin-top: 0.75rem;
+  border-radius: 10px;
+  color: white !important;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(
+    135deg,
+    #667eea,
+    #764ba2
+  ) !important;
+
+  box-shadow:
+    0 6px 15px rgba(102, 126, 234, 0.35);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 10px 22px rgba(102, 126, 234, 0.45);
+  }
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Password visibility eye button
+
+button[mat-icon-button] {
+  color: #667eea;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    color: #764ba2;
+    transform: scale(1.1);
+  }
+}
+
+// Animation
+
+@keyframes card-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 1rem;
+  }
+
+  .login-card {
+    padding: 1.5rem;
+
+    border-radius: 16px;
+  }
+
+  mat-card-title {
+    font-size: 1.5rem;
+  }
+}
