@@ -26,6 +26,14 @@ export class AuthService {
     );
   }
 
+  register(name: string, email: string, password: string): Observable<unknown> {
+    return this.http.post<unknown>(`${API_URL}/auth/register`, {
+      name,
+      email,
+      password,
+    });
+  }
+
   logout(): void {
     localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
     this.accessToken.set(null);
