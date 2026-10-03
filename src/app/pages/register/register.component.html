@@ -1,0 +1,77 @@
+<div class="container">
+  <mat-card class="card">
+    <mat-card-header class="header">
+      <mat-card-title class="title">Create account</mat-card-title>
+      <mat-card-subtitle class="subtitle">Join your Kanban workspace</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput formControlName="firstName" autocomplete="given-name" />
+          @if (form.controls.firstName.hasError('required')) {
+            <mat-error>First name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput formControlName="lastName" autocomplete="family-name" />
+          @if (form.controls.lastName.hasError('required')) {
+            <mat-error>Last name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+          />
+          @if (form.controls.email.hasError('required')) {
+            <mat-error>Email is required</mat-error>
+          } @else if (form.controls.email.hasError('email')) {
+            <mat-error>Please enter a valid email</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="password"
+            autocomplete="new-password"
+          />
+          @if (form.controls.password.hasError('required')) {
+            <mat-error>Password is required</mat-error>
+          } @else if (form.controls.password.hasError('minlength')) {
+            <mat-error>At least 6 characters</mat-error>
+          }
+        </mat-form-field>
+
+        @if (errorMessage()) {
+          <p class="error" role="alert">{{ errorMessage() }}</p>
+        }
+
+        @if (successMessage()) {
+          <p class="success" role="status">{{ successMessage() }}</p>
+        }
+
+        <button mat-flat-button type="submit" class="btn btn-primary">
+          Create account
+        </button>
+
+        <div class="actions">
+          <span>Already have an account?</span>
+          <button mat-button type="button" class="link btn btn-secondary" (click)="onLogin()">
+            Sign in
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

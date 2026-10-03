@@ -1,10 +1,11 @@
 //======  KANBAN BOARD GENERAL STYLES ======
 
-
 // VARIABLES
 
 //=== colors
 $primary: #127249;
+$primary-light: #4FAF83;
+$primary-dark: #0B5133;
 $secondary: #6FA58C;
 $text: #2d3748;
 $text-muted: #718096;
@@ -15,6 +16,13 @@ $error-background: #fff1f1;
 $card-radius: 20px;
 $input-radius: 12px;
 $button-radius: 10px;
+
+//=== spacing
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
 
 // GENERAL
 html,
@@ -91,7 +99,8 @@ mat-card-subtitle.subtitle {
 
 .form-field {
   --mdc-outlined-text-field-focus-outline-color: #{$primary};
-  --mdc-outlined-text-field-focus-label-text-color: #{$primary};
+  --mdc-outlined-text-field-label-text-color: #{$text};
+  --mdc-outlined-text-field-focus-label-text-color: #{$text};
   --mdc-outlined-text-field-hover-outline-color: #{$secondary};
 }
 
@@ -107,13 +116,20 @@ mat-card-subtitle.subtitle {
     ) border-box;
 }
 
-.form-field .mdc-notched-outline {
-  display: none;
+.form-field .mdc-notched-outline__leading,
+.form-field .mdc-notched-outline__notch,
+.form-field .mdc-notched-outline__trailing {
+  border-color: transparent !important;
 }
 
 .form-field .mdc-floating-label {
   padding-inline: 4px;
   background-color: #fff;
+  color: $text !important;
+}
+
+.form-field .mat-mdc-form-field-error {
+  color: $error !important;
 }
 
 .form-field.mat-focused
@@ -122,6 +138,9 @@ mat-card-subtitle.subtitle {
     0 0 0 2px rgba(102, 126, 234, 0.25);
 }
 
+.mdc-text-field--outlined .mat-mdc-form-field-infix{
+  padding-left: $spacing-sm;
+}
 // ERROR MESSAGE
 .error {
   color: $error;
@@ -133,42 +152,124 @@ mat-card-subtitle.subtitle {
   margin: 0.25rem 0;
 }
 
-// PRIMARY BUTTON
+// BUTTON
+
+button.btn {
+  height: 50px;
+  border-radius: $button-radius;
+  font-size: 1rem;
+  font-weight: 600;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:disabled,
+  &.btn-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+//=== Primary button
 
 button.btn-primary {
   width: 100%;
-  height: 50px;
   margin-top: 0.75rem;
   border: none;
-  border-radius: $button-radius;
   color: white !important;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: $button-radius;
   background: linear-gradient(
     135deg,
     $primary,
     $secondary
   ) !important;
   box-shadow:
-    0 6px 15px rgba(102, 126, 234, 0.35);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  &:hover {
+    0 6px 15px rgba(79, 138, 112, 0.25);
+  &:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow:
-      0 10px 22px rgba(102, 126, 234, 0.45);
+      0 10px 22px rgba(79, 138, 112, 0.35);
   }
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(0);
   }
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+}
+
+//=== Secondary button
+
+button.btn-secondary {
+  width: 100%;
+  margin-top: 0.75rem;
+  border: 1px solid $primary;
+  color: $primary !important;
+  background: rgba(79, 138, 112, 0.08) !important;
+  box-shadow: none;
+  &:hover:not(:disabled) {
+    color: white !important;
+    background: $primary !important;
+    transform: translateY(-1px);
+    box-shadow:
+      0 5px 12px rgba(79, 138, 112, 0.20);
   }
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+//=== Tertiory button
+
+button.btn-tertiary {
+  width: 100%;
+  margin-top: 0.75rem;
+  border: 1px solid $primary-light;
+  color: $primary-dark !important;
+  background: $primary-light !important;
+  box-shadow: none;
+  &:hover:not(:disabled) {
+    background: lighten($primary-light, 5%) !important;
+    border-color: $primary;
+    transform: translateY(-1px);
+  }
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+//=== Ghost button
+
+button.btn-ghost {
+  width: 100%;
+  margin-top: 0.75rem;
+  border: 1px solid transparent;
+  color: $primary !important;
+  background: transparent !important;
+  box-shadow: none;
+  &:hover:not(:disabled) {
+    background: rgba(79, 138, 112, 0.08) !important;
+    border-color: rgba(79, 138, 112, 0.15);
+    transform: translateY(-1px);
+  }
+  &:active:not(:disabled) {
+    background: rgba(79, 138, 112, 0.12) !important;
+    transform: translateY(0);
+  }
+}
+
+//=== Disabled button
+
+button.btn-disabled,
+button:disabled {
+  opacity: 0.55 !important;
+  color: $text-muted !important;
+  background: #E8EDE9 !important;
+  border-color: transparent !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 // PASSWORD VISIBILITY TOGGLE
@@ -194,7 +295,6 @@ button.btn-primary {
   transition: color 0.2s ease;
   &:hover {
     color: $secondary;
-    text-decoration: underline;
   }
 }
 
