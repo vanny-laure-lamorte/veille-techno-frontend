@@ -1,4 +1,5 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
+import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
@@ -17,9 +18,8 @@ export interface AuthenticatedUser {
 export const ACCESS_TOKEN_STORAGE_KEY = 'access_token';
 export const API_URL = 'http://localhost:3001/api';
 
-@Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private readonly http: HttpClient) {}
+  private http = inject(HttpClient);
 
   private readonly accessToken = signal<string | null>(this.loadAccessToken());
 

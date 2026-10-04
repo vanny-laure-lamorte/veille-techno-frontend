@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -14,11 +14,8 @@ export interface KanbanList {
   createdAt: string;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
 export class ListService {
-  constructor(private readonly http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getLists(): Observable<KanbanList[]> {
     return this.http.get<KanbanList[]>(`${API_URL}/lists`);
