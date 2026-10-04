@@ -22,6 +22,9 @@ import { AuthService } from '../../core/auth.service';
 import { CardService, KanbanCard } from '../../core/card.service';
 import { KanbanList, ListService, ResourceId } from '../../core/list.services';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
 interface BoardColumn extends KanbanList {
   cards: KanbanCard[];
 }
@@ -29,7 +32,14 @@ interface BoardColumn extends KanbanList {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CdkDrag, CdkDropList, CdkDropListGroup, MatButtonModule, MatIconModule],
+  imports: [CdkDrag,
+    CdkDropList,
+    CdkDropListGroup,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -215,6 +225,52 @@ export class HomeComponent implements OnInit {
         },
         error: () => this.mutationError.set('The ticket could not be created.'),
       });
+  }
+
+
+  editingColumnId = signal<ResourceId | null>(null);
+
+  startEdit(column: BoardColumn): void {
+    this.editingColumnId.set(column.id);
+  }
+
+  cancelEdit(): void {
+    this.editingColumnId.set(null);
+  }
+
+  /*
+  * Updates the title of a specific list (column) with the given new title.
+  * @param column - The BoardColumn object representing the list to update.
+  * @param newTitle - The new title for the list.
+  */
+  updateListTitle(column: BoardColumn, newTitle: string): void {
+    const title = newTitle.trim();
+
+    // check if the new title is empty
+    if (!title) {
+      this.mutationError.set('The list title cannot be empty.');
+      return;
+    }
+
+    // Check if the new title already exists in another column
+    const titleAlreadyExists = this.columns().some(
+      (currentColumn) =>
+        currentColumn.id !== column.id &&
+        currentColumn.title.trim().toLocaleLowerCase() === title.toLocaleLowerCase(),
+    );
+    if (titleAlreadyExists) {
+      this.mutationError.set('A list with this name already exists.');
+      return;
+    }
+
+    // If the title is valid and unique, proceed to update the list
+    this.listService.updateList(column.id, { title }).subscribe({
+      next: () => {
+        this.editingColumnId.set(null);
+        this.loadBoard();
+      },
+      error: () => this.mutationError.set('The list title could not be updated.'),
+    });
   }
 
   deleteList(column: BoardColumn): void {

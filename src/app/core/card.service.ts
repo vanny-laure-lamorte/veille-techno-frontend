@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { API_URL } from './auth.service';
 import { ResourceId } from './list.services';
@@ -15,6 +15,9 @@ export interface KanbanCard {
   updatedAt: string;
 }
 
+@Injectable({
+  providedIn: 'root',
+})
 export class CardService {
   private http = inject(HttpClient);
 
