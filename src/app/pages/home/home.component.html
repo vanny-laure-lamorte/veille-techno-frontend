@@ -1,1 +1,192 @@
-<p>home works!</p>
+<div class="workspace-shell">
+  <aside class="sidebar" aria-label="Navigation du projet">
+    <a class="brand" href="/home" aria-label="Accueil Kanban">
+      <span class="brand-mark"><mat-icon>view_kanban</mat-icon></span>
+      <span class="brand-name">Kanban<span>.</span></span>
+    </a>
+
+    <div class="workspace-picker">
+      <span class="workspace-monogram">MK</span>
+      <span class="workspace-copy">
+        <span class="workspace-label">Personal workspace</span>
+        <strong>My board</strong>
+      </span>
+      <mat-icon aria-hidden="true">unfold_more</mat-icon>
+    </div>
+
+    <div class="sidebar-section-label">TABLEAU</div>
+    <div class="project-row">
+      <span class="project-mark">K</span>
+      <span>My lists</span>
+    </div>
+    <nav class="project-nav" aria-label="Vues du tableau">
+      <a class="nav-item is-active" href="/home" aria-current="page">
+        <mat-icon aria-hidden="true">view_kanban</mat-icon>
+        <span>Board</span>
+        <span class="nav-count">{{ totalCards() }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+
+    <section class="sprint-summary" aria-label="Résumé du tableau">
+      <div class="sprint-summary-top">
+        <span class="sprint-dot"></span>
+        <span>TABLEAU</span>
+        <span class="sprint-days">{{ columns().length }} lists</span>
+      </div>
+      <strong>{{ totalCards() }} tickets</strong>
+      <div class="sprint-summary-bottom">
+        <span>Data synced</span>
+      </div>
+    </section>
+
+    <div class="sidebar-footer">
+      <div class="current-user">
+        <span class="user-avatar">{{ userInitials() }}</span>
+        <span class="user-copy"><strong>{{ currentUserName() }}</strong><small>Signed in</small></span>
+      </div>
+      <button mat-button class="logout-button" type="button" (click)="logout()">
+        <mat-icon aria-hidden="true">logout</mat-icon>
+        <span>Log out</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="breadcrumbs"><span>Workspace</span><mat-icon aria-hidden="true">chevron_right</mat-icon><strong>My board</strong></div>
+      <div class="topbar-actions">
+        <label class="search-box">
+          <mat-icon aria-hidden="true">search</mat-icon>
+          <input
+            #cardSearch
+            type="search"
+            placeholder="Search tickets"
+            aria-label="Search tickets"
+            [value]="searchQuery()"
+            (input)="updateSearch(cardSearch.value)"
+          />
+        </label>
+        <div class="topbar-divider"></div>
+        <div class="topbar-avatar" [attr.aria-label]="currentUserName()">{{ userInitials() }}</div>
+      </div>
+    </header>
+
+    <section class="board-page" aria-labelledby="board-title">
+      <div class="board-heading">
+        <div>
+          <div class="eyebrow">PERSONAL WORKSPACE <span>/</span> KANBAN</div>
+          <div class="title-row">
+            <h1 id="board-title">My board</h1>
+            <span class="board-private"><mat-icon aria-hidden="true">lock</mat-icon> Private</span>
+          </div>
+          <p class="board-description">Organize tickets into lists and track their progress.</p>
+        </div>
+        <div class="heading-side">
+          <span class="updated-at"><span class="live-dot"></span> {{ columns().length }} lists · {{ totalCards() }} tickets</span>
+        </div>
+      </div>
+
+      <div class="board-toolbar">
+        <div class="view-switch" aria-label="Vue du tableau">
+          <span class="view-option is-selected"><mat-icon aria-hidden="true">view_kanban</mat-icon> Board</span>
+        </div>
+        <div class="toolbar-right">
+          <button mat-flat-button type="button" class="create-button" (click)="toggleListForm()">
+            <mat-icon aria-hidden="true">view_column</mat-icon>
+            New list
+          </button>
+          <button mat-flat-button type="button" class="create-button" (click)="toggleIssueForm()" [disabled]="columns().length === 0">
+            <mat-icon aria-hidden="true">add</mat-icon>
+            Create ticket
+          </button>
+        </div>
+      </div>
+
+      @if (showListForm()) {
+        <form class="creation-panel" (submit)="createList($event, listTitle.value, listTitle)">
+          <label for="new-list-title">List title</label>
+          <input #listTitle id="new-list-title" required maxlength="120" placeholder="Ex. À faire" />
+          <button mat-flat-button type="submit" class="create-button">Add list</button>
+        </form>
+      }
+
+      @if (showIssueForm()) {
+        <form class="creation-panel" (submit)="createCard($event, cardTitle.value, cardDescription.value, targetList.value, cardTitle, cardDescription)">
+          <label for="new-card-title">Ticket title</label>
+          <input #cardTitle id="new-card-title" required maxlength="200" placeholder="e.g. Add profile page" />
+          <label for="new-card-description">Description (optional)</label>
+          <textarea #cardDescription id="new-card-description" rows="2" placeholder="Ticket details"></textarea>
+          <label for="target-list">List</label>
+          <select #targetList id="target-list" required>
+            @for (column of columns(); track column.id) {
+              <option [value]="column.id">{{ column.title }}</option>
+            }
+          </select>
+          <button mat-flat-button type="submit" class="create-button">Add ticket</button>
+        </form>
+      }
+
+      @if (mutationError()) {
+        <p class="board-feedback" role="alert">{{ mutationError() }}</p>
+      }
+
+      @if (loading()) {
+        <div class="empty-board" role="status">Chargement du tableau…</div>
+      } @else if (boardError()) {
+        <div class="empty-board" role="alert">{{ boardError() }}</div>
+      } @else if (columns().length === 0) {
+        <div class="empty-board">
+          <strong>No lists yet</strong>
+          <span>Create a list to get your board started.</span>
+          <button mat-flat-button type="button" class="create-button" (click)="toggleListForm()">Create a list</button>
+        </div>
+      } @else {
+        <div class="board-columns" cdkDropListGroup aria-label="Tableau Kanban">
+          @for (column of visibleColumns(); track column.id) {
+            <section
+              class="board-column"
+              [id]="'list-' + column.id"
+              cdkDropList
+              [cdkDropListData]="column.cards"
+              [cdkDropListDisabled]="searchQuery().trim().length > 0"
+              (cdkDropListDropped)="dropCard($event, column.id)"
+              [attr.aria-label]="column.title + ', ' + column.cards.length + ' tickets'"
+            >
+              <header class="column-header">
+                <div class="column-title-group">
+                  <span class="column-status-dot"></span>
+                  <h2>{{ column.title }}</h2>
+                  <span class="issue-count">{{ column.cards.length }}</span>
+                </div>
+                <button class="column-menu" type="button" [attr.aria-label]="'Delete list ' + column.title" (click)="deleteList(column)">
+                  <mat-icon aria-hidden="true">delete_outline</mat-icon>
+                </button>
+              </header>
+
+              <div class="column-body">
+                @for (card of column.cards; track card.id) {
+                  <article class="issue-card" cdkDrag [cdkDragDisabled]="searchQuery().trim().length > 0">
+                    <div class="issue-card-top">
+                      <span class="issue-key">#{{ card.id }}</span>
+                      <button class="card-delete" type="button" [attr.aria-label]="'Delete ticket ' + card.title" (click)="deleteCard(card)">
+                        <mat-icon aria-hidden="true">close</mat-icon>
+                      </button>
+                    </div>
+                    <h3>{{ card.title }}</h3>
+                    @if (card.description) {
+                      <p class="issue-description">{{ card.description }}</p>
+                    }
+                  </article>
+                } @empty {
+                  <div class="empty-column">No tickets in this list</div>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      }
+    </section>
+  </main>
+</div>

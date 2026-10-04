@@ -1,3 +1,5 @@
+@use "sass:color";
+
 //======  KANBAN BOARD GENERAL STYLES ======
 
 // VARIABLES
@@ -230,7 +232,7 @@ button.btn-tertiary {
   background: $primary-light !important;
   box-shadow: none;
   &:hover:not(:disabled) {
-    background: lighten($primary-light, 5%) !important;
+    background: color.adjust($primary-light, $lightness: 5%) !important;
     border-color: $primary;
     transform: translateY(-1px);
   }

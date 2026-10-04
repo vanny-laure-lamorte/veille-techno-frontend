@@ -6,6 +6,14 @@ export interface LoginResponse {
   accessToken: string;
 }
 
+export interface AuthenticatedUser {
+  id: number | string;
+  email: string;
+  name: string;
+  role: 'user' | 'admin';
+  createdAt: string;
+}
+
 export const ACCESS_TOKEN_STORAGE_KEY = 'access_token';
 export const API_URL = 'http://localhost:3001/api';
 
@@ -26,8 +34,12 @@ export class AuthService {
     );
   }
 
-  register(name: string, email: string, password: string): Observable<unknown> {
-    return this.http.post<unknown>(`${API_URL}/auth/register`, {
+  getCurrentUser(): Observable<AuthenticatedUser> {
+    return this.http.get<AuthenticatedUser>(`${API_URL}/users/me`);
+  }
+
+  register(name: string, email: string, password: string): Observable<AuthenticatedUser> {
+    return this.http.post<AuthenticatedUser>(`${API_URL}/auth/register`, {
       name,
       email,
       password,
