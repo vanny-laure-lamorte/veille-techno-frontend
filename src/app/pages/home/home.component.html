@@ -1,4 +1,6 @@
 <div class="workspace-shell">
+
+    <!-- SIDEBAR -->
   <aside class="sidebar" aria-label="Navigation du projet">
     <a class="brand" href="/home" aria-label="Accueil Kanban">
       <span class="brand-mark"><mat-icon>view_kanban</mat-icon></span>
@@ -53,7 +55,10 @@
     </div>
   </aside>
 
+  <!-- KANBAN BOARD -->
   <main class="main-content">
+
+    <!-- Header -->
     <header class="topbar">
       <div class="breadcrumbs"><span>Workspace</span><mat-icon aria-hidden="true">chevron_right</mat-icon><strong>My board</strong></div>
       <div class="topbar-actions">
@@ -74,6 +79,8 @@
     </header>
 
     <section class="board-page" aria-labelledby="board-title">
+
+        <!-- Board general information and actions -->
       <div class="board-heading">
         <div>
           <div class="eyebrow">PERSONAL WORKSPACE <span>/</span> KANBAN</div>
@@ -106,9 +113,9 @@
 
       @if (showListForm()) {
         <form class="creation-panel" (submit)="createList($event, listTitle.value, listTitle)">
-          <label for="new-list-title">List title</label>
-          <input #listTitle id="new-list-title" required maxlength="120" placeholder="Ex. À faire" />
-          <button mat-flat-button type="submit" class="create-button">Add list</button>
+          <label for="new-list-title">New column name</label>
+          <input #listTitle id="new-list-title" required maxlength="120" placeholder="Ex. To do" />
+          <button mat-flat-button type="submit" class="create-button">Add</button>
         </form>
       }
 
@@ -154,16 +161,53 @@
               (cdkDropListDropped)="dropCard($event, column.id)"
               [attr.aria-label]="column.title + ', ' + column.cards.length + ' tickets'"
             >
-              <header class="column-header">
-                <div class="column-title-group">
-                  <span class="column-status-dot"></span>
-                  <h2>{{ column.title }}</h2>
-                  <span class="issue-count">{{ column.cards.length }}</span>
-                </div>
-                <button class="column-menu" type="button" [attr.aria-label]="'Delete list ' + column.title" (click)="deleteList(column)">
+            <div class="column-header">
+                @if (editingColumnId() === column.id) {
+                    <div class="edit-input-wrapper">
+                        <input
+                            matInput
+                            #titleInput
+                            type="text"
+                            class="edit-input"
+                            [value]="column.title"
+                            (keyup.enter)="updateListTitle(column, titleInput.value)"
+                            (keyup.escape)="cancelEdit()"
+                        />
+
+                        <button
+                            mat-icon-button
+                            type="button"
+                            aria-label="Save list title"
+                            (click)="updateListTitle(column, titleInput.value)"
+                        >
+                            <mat-icon>keyboard_return</mat-icon>
+                        </button>
+                    </div>
+                } @else {
+                    <h2>{{ column.title }}</h2>
+                }
+
+              <!-- Action buttons for each column : edit or delete -->
+              <div class="column-actions">
+                  <button
+                      class="column-menu"
+                      type="button"
+                      [attr.aria-label]="'Delete list ' + column.title"
+                      (click)="deleteList(column)"
+                  >
                   <mat-icon aria-hidden="true">delete_outline</mat-icon>
-                </button>
-              </header>
+                  </button>
+
+                  <button
+                      class="column-menu"
+                      type="button"
+                      [attr.aria-label]="'Edit list ' + column.title"
+                      (click)="startEdit(column)"
+                  >
+                  <mat-icon aria-hidden="true">edit</mat-icon>
+                  </button>
+              </div>
+            </div>
 
               <div class="column-body">
                 @for (card of column.cards; track card.id) {
