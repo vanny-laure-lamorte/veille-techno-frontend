@@ -21,8 +21,7 @@ import { forkJoin, map, of, switchMap } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 import { CardService, KanbanCard } from '../../core/card.service';
 import { KanbanList, ListService, ResourceId } from '../../core/list.services';
-
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { BoardCardComponent } from './board-card.component';
 import { MatInputModule } from '@angular/material/input';
 
 interface BoardColumn extends KanbanList {
@@ -30,21 +29,22 @@ interface BoardColumn extends KanbanList {
 }
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-board',
   standalone: true,
-  imports: [CdkDrag,
+  imports: [
+    BoardCardComponent,
+    CdkDrag,
     CdkDropList,
     CdkDropListGroup,
     MatButtonModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
   ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  templateUrl: './board.component.html',
+  styleUrl: './board.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnInit {
+export class BoardComponent implements OnInit {
   protected readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly listService = inject(ListService);
@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
   readonly mutationError = signal('');
   readonly showListForm = signal(false);
   readonly showIssueForm = signal(false);
-  readonly currentUserName = signal('Mon compte');
+  readonly currentUserName = signal('My account');
 
   readonly totalCards = computed(() =>
     this.columns().reduce((total, column) => total + column.cards.length, 0),
@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit {
     this.loadBoard();
     this.authService.getCurrentUser().subscribe({
       next: (user) => this.currentUserName.set(user.name || user.email),
-      error: () => this.currentUserName.set('Mon compte'),
+      error: () => this.currentUserName.set('My account'),
     });
   }
 
@@ -227,7 +227,6 @@ export class HomeComponent implements OnInit {
       });
   }
 
-
   editingColumnId = signal<ResourceId | null>(null);
 
   startEdit(column: BoardColumn): void {
@@ -239,10 +238,10 @@ export class HomeComponent implements OnInit {
   }
 
   /*
-  * Updates the title of a specific list (column) with the given new title.
-  * @param column - The BoardColumn object representing the list to update.
-  * @param newTitle - The new title for the list.
-  */
+   * Updates the title of a specific list (column) with the given new title.
+   * @param column - The BoardColumn object representing the list to update.
+   * @param newTitle - The new title for the list.
+   */
   updateListTitle(column: BoardColumn, newTitle: string): void {
     const title = newTitle.trim();
 

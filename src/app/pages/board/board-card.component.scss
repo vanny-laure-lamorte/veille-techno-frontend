@@ -1,0 +1,90 @@
+:host {
+  display: block;
+}
+
+.issue-card {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 12px 12px 10px;
+  background: #fff;
+  border: 1px solid #e5eae6;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(25, 50, 35, 0.035);
+  cursor: grab;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.issue-card:hover {
+  border-color: #c9d8cd;
+  box-shadow: 0 4px 12px rgba(25, 50, 35, 0.08);
+  transform: translateY(-1px);
+}
+
+.issue-card:active {
+  cursor: grabbing;
+}
+
+.issue-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.issue-key {
+  color: #728078;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.issue-card h3 {
+  margin: -3px 0 0;
+  color: #27352d;
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.5;
+}
+
+.card-delete {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: #87938a;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.card-delete:hover {
+  color: #a43830;
+  background: #fff0ee;
+}
+
+.card-delete mat-icon {
+  width: 17px;
+  height: 17px;
+  font-size: 17px;
+}
+
+.issue-description {
+  margin: -5px 0 0;
+  color: #718078;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+:host(.cdk-drag-preview) .issue-card {
+  box-sizing: border-box;
+  box-shadow: 0 10px 24px rgba(25, 50, 35, 0.18);
+  transform: rotate(1deg);
+}
+
+:host(.cdk-drag-placeholder) .issue-card {
+  min-height: 95px;
+  background: #e0ebe3;
+  border: 1px dashed #79a88a;
+  opacity: 0.8;
+}

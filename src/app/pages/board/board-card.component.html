@@ -1,0 +1,17 @@
+<article class="issue-card">
+  <div class="issue-card-top">
+    <span class="issue-key">#{{ card().id }}</span>
+    <button
+      class="card-delete"
+      type="button"
+      [attr.aria-label]="'Delete ticket ' + card().title"
+      (click)="deleteCard.emit(card())"
+    >
+      <mat-icon aria-hidden="true">close</mat-icon>
+    </button>
+  </div>
+  <h3>{{ card().title }}</h3>
+  @if (card().description) {
+    <p class="issue-description">{{ card().description }}</p>
+  }
+</article>
