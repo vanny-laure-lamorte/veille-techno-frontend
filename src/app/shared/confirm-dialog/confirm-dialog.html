@@ -1,0 +1,37 @@
+<div class="confirm-dialog">
+  <div class="confirm-dialog-content">
+
+    <!-- Icon -->
+    @if (icon()) {
+      <div class="confirm-dialog-icon">
+        <mat-icon>{{ icon() }}</mat-icon>
+      </div>
+    }
+
+    <!-- Title and message -->
+    <h2>{{ title() }}</h2>
+    <p>{{ message() }}</p>
+
+    <!-- Cancel and delete btn -->
+    <div class="confirm-dialog-actions">
+      <button
+        mat-button
+        type="button"
+        class="btn btn-ghost"
+        (click)="onCancel()"
+      >
+        {{ cancelText() }}
+      </button>
+
+      <button
+        mat-flat-button
+        type="button"
+        class="btn btn-primary"
+        (click)="onConfirm()"
+      >
+        {{ confirmText() }}
+      </button>
+    </div>
+
+  </div>
+</div>

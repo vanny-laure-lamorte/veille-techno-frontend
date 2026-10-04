@@ -1,0 +1,44 @@
+.confirm-dialog {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 35%);
+  border-radius: 12px;
+}
+
+.confirm-dialog-content {
+  width: min(320px, calc(100% - 24px));
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 25%);
+}
+
+.confirm-dialog-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+  mat-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 32px;
+  }
+}
+
+h2 {
+  margin: 0 0 8px;
+}
+
+p {
+  margin: 0;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}

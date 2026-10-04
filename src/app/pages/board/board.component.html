@@ -152,6 +152,7 @@
       } @else {
         <div class="board-columns" cdkDropListGroup aria-label="Kanban board">
           @for (column of visibleColumns(); track column.id) {
+
             <section
               class="board-column"
               [id]="'list-' + column.id"
@@ -161,53 +162,52 @@
               (cdkDropListDropped)="dropCard($event, column.id)"
               [attr.aria-label]="column.title + ', ' + column.cards.length + ' tickets'"
             >
-            <div class="column-header">
+              <div class="column-header">
                 @if (editingColumnId() === column.id) {
-                    <div class="edit-input-wrapper">
-                        <input
-                            matInput
-                            #titleInput
-                            type="text"
-                            class="edit-input"
-                            [value]="column.title"
-                            (keyup.enter)="updateListTitle(column, titleInput.value)"
-                            (keyup.escape)="cancelEdit()"
-                        />
+                  <div class="edit-input-wrapper">
+                    <input
+                      matInput
+                      #titleInput
+                      type="text"
+                      class="edit-input"
+                      [value]="column.title"
+                      (keyup.enter)="updateListTitle(column, titleInput.value)"
+                      (keyup.escape)="cancelEdit()"
+                    />
 
-                        <button
-                            mat-icon-button
-                            type="button"
-                            aria-label="Save list title"
-                            (click)="updateListTitle(column, titleInput.value)"
-                        >
-                            <mat-icon>keyboard_return</mat-icon>
-                        </button>
-                    </div>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      aria-label="Save list title"
+                      (click)="updateListTitle(column, titleInput.value)"
+                    >
+                      <mat-icon>keyboard_return</mat-icon>
+                    </button>
+                  </div>
                 } @else {
-                    <h2>{{ column.title }}</h2>
+                  <h2>{{ column.title }}</h2>
                 }
 
-              <!-- Action buttons for each column : edit or delete -->
-              <div class="column-actions">
+                <div class="column-actions">
                   <button
-                      class="column-menu"
-                      type="button"
-                      [attr.aria-label]="'Delete list ' + column.title"
-                      (click)="deleteList(column)"
+                    class="column-menu"
+                    type="button"
+                    [attr.aria-label]="'Delete list ' + column.title"
+                    (click)="askDeleteList(column)"
                   >
-                  <mat-icon aria-hidden="true">delete_outline</mat-icon>
+                    <mat-icon aria-hidden="true">delete_outline</mat-icon>
                   </button>
 
                   <button
-                      class="column-menu"
-                      type="button"
-                      [attr.aria-label]="'Edit list ' + column.title"
-                      (click)="startEdit(column)"
+                    class="column-menu"
+                    type="button"
+                    [attr.aria-label]="'Edit list ' + column.title"
+                    (click)="startEdit(column)"
                   >
-                  <mat-icon aria-hidden="true">edit</mat-icon>
+                    <mat-icon aria-hidden="true">edit</mat-icon>
                   </button>
+                </div>
               </div>
-            </div>
 
               <div class="column-body">
                 @for (card of column.cards; track card.id) {
@@ -215,12 +215,24 @@
                     cdkDrag
                     [card]="card"
                     [cdkDragDisabled]="searchQuery().trim().length > 0"
-                    (deleteCard)="deleteCard($event)"
+                    (deleteCard)="askDeleteCard($event)"
                   />
                 } @empty {
                   <div class="empty-column">No tickets in this list</div>
                 }
               </div>
+
+              @if (listToDelete()?.id === column.id) {
+                <app-confirm-dialog
+                  [title]="'Delete list?'"
+                  [message]="'Are you sure you want to delete &quot;' + column.title + '&quot;?'"
+                  [icon]="'delete_outline'"
+                  [confirmText]="'Delete'"
+                  [cancelText]="'Cancel'"
+                  (confirmed)="confirmDeleteList()"
+                  (cancelled)="cancelDeleteList()"
+                />
+              }
             </section>
           }
         </div>

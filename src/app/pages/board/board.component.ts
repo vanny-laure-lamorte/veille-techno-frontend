@@ -23,6 +23,7 @@ import { CardService, KanbanCard } from '../../core/card.service';
 import { KanbanList, ListService, ResourceId } from '../../core/list.services';
 import { BoardCardComponent } from './board-card.component';
 import { MatInputModule } from '@angular/material/input';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
 
 interface BoardColumn extends KanbanList {
   cards: KanbanCard[];
@@ -39,6 +40,7 @@ interface BoardColumn extends KanbanList {
     MatButtonModule,
     MatIconModule,
     MatInputModule,
+    ConfirmDialogComponent,
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',
@@ -58,6 +60,8 @@ export class BoardComponent implements OnInit {
   readonly showListForm = signal(false);
   readonly showIssueForm = signal(false);
   readonly currentUserName = signal('My account');
+  readonly listToDelete = signal<BoardColumn | null>(null);
+  readonly cardToDelete = signal<KanbanCard | null>(null);
 
   readonly totalCards = computed(() =>
     this.columns().reduce((total, column) => total + column.cards.length, 0),
@@ -278,6 +282,60 @@ export class BoardComponent implements OnInit {
     this.listService.deleteList(column.id).subscribe({
       next: () => this.loadBoard(),
       error: () => this.mutationError.set('The list could not be deleted.'),
+    });
+  }
+
+  askDeleteList(column: BoardColumn): void {
+    this.listToDelete.set(column);
+  }
+
+  cancelDeleteList(): void {
+    this.listToDelete.set(null);
+  }
+
+  confirmDeleteList(): void {
+    const column = this.listToDelete();
+
+    if (!column) {
+      return;
+    }
+
+    this.listService.deleteList(column.id).subscribe({
+      next: () => {
+        this.listToDelete.set(null);
+        this.loadBoard();
+      },
+      error: () => {
+        this.listToDelete.set(null);
+        this.mutationError.set('The list could not be deleted.');
+      },
+    });
+  }
+
+  askDeleteCard(card: KanbanCard): void {
+    this.cardToDelete.set(card);
+  }
+
+  cancelDeleteCard(): void {
+    this.cardToDelete.set(null);
+  }
+
+  confirmDeleteCard(): void {
+    const card = this.cardToDelete();
+
+    if (!card) {
+      return;
+    }
+
+    this.cardService.deleteCard(card.id).subscribe({
+      next: () => {
+        this.cardToDelete.set(null);
+        this.loadBoard();
+      },
+      error: () => {
+        this.cardToDelete.set(null);
+        this.mutationError.set('The ticket could not be deleted.');
+      },
     });
   }
 
