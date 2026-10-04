@@ -65,6 +65,8 @@ export class BoardComponent implements OnInit {
   readonly userCreatedAt = signal('Joined');
   readonly listToDelete = signal<BoardColumn | null>(null);
   readonly cardToDelete = signal<KanbanCard | null>(null);
+  readonly editingCard = signal<KanbanCard | null>(null);
+  readonly editingColumnId = signal<ResourceId | null>(null);
 
   readonly totalCards = computed(() =>
     this.columns().reduce((total, column) => total + column.cards.length, 0),
@@ -81,19 +83,9 @@ export class BoardComponent implements OnInit {
         .toLocaleUpperCase() || 'U',
   );
 
-  readonly userRole = computed(
-    () =>
-      this.currentUserRole()
-        .trim()
-        .split(/\s+/)
-  );
+  readonly userRole = computed(() => this.currentUserRole().trim().split(/\s+/));
 
-  readonly userEmail = computed(
-    () =>
-      this.currentUserEmail()
-        .trim()
-        .split(/\s+/)
-  );
+  readonly userEmail = computed(() => this.currentUserEmail().trim().split(/\s+/));
 
   readonly visibleColumns = computed(() => {
     const query = this.searchQuery().trim().toLocaleLowerCase();
@@ -118,7 +110,7 @@ export class BoardComponent implements OnInit {
         this.currentUserRole.set(user.role);
         this.userCreatedAt.set(new Date(user.createdAt).toLocaleDateString());
       },
-    error: () => {
+      error: () => {
         this.currentUserName.set('My account');
         this.currentUserRole.set('My role');
       },
@@ -256,14 +248,61 @@ export class BoardComponent implements OnInit {
       });
   }
 
-  editingColumnId = signal<ResourceId | null>(null);
+  submitCardForm(
+    event: Event,
+    title: string,
+    description: string,
+    listId: string,
+    titleInput: HTMLInputElement,
+    descriptionInput: HTMLTextAreaElement,
+  ): void {
+    event.preventDefault();
+
+    const editingCard = this.editingCard();
+
+    if (editingCard) {
+      this.cardService
+        .updateCard(editingCard.id, {
+          title: title.trim(),
+          description: description.trim(),
+          listId,
+        })
+        .subscribe({
+          next: () => {
+            this.editingCard.set(null);
+            this.showIssueForm.set(false);
+            this.mutationError.set('');
+            this.loadBoard();
+          },
+          error: () => {
+            this.mutationError.set('The ticket could not be updated.');
+          },
+        });
+
+      return;
+    }
+
+    this.createCard(event, title, description, listId, titleInput, descriptionInput);
+  }
 
   startEdit(column: BoardColumn): void {
     this.editingColumnId.set(column.id);
+    this.mutationError.set('');
   }
 
   cancelEdit(): void {
     this.editingColumnId.set(null);
+    this.mutationError.set('');
+  }
+
+  startEditCard(card: KanbanCard): void {
+    this.editingCard.set(card);
+    this.showIssueForm.set(true);
+  }
+
+  cancelEditCard(): void {
+    this.editingCard.set(null);
+    this.showIssueForm.set(false);
   }
 
   /*

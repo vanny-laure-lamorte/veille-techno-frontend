@@ -9,6 +9,14 @@
     >
       <mat-icon aria-hidden="true">close</mat-icon>
     </button>
+    <button
+      class="card-delete"
+      type="button"
+      [attr.aria-label]="'Update ticket ' + card().title"
+      (click)="updateCard.emit(card())"
+    >
+      <mat-icon aria-hidden="true">edit</mat-icon>
+    </button>
   </div>
   <h3>{{ card().title }}</h3>
   @if (card().description) {

@@ -7,42 +7,19 @@
       <span class="brand-name">Kanban<span>.</span></span>
     </a>
 
-    <div class="workspace-picker">
-      <span class="workspace-monogram">MK</span>
-      <span class="workspace-copy">
-        <span class="workspace-label">Personal workspace</span>
-        <strong>My board</strong>
-      </span>
-      <mat-icon aria-hidden="true">unfold_more</mat-icon>
-    </div>
-
     <div class="sidebar-section-label">BOARD</div>
     <div class="project-row">
       <span class="project-mark">K</span>
-      <span>My lists</span>
+      <span>My board lists</span>
     </div>
     <nav class="project-nav" aria-label="Board views">
       <a class="nav-item is-active" href="/board" aria-current="page">
         <mat-icon aria-hidden="true">view_kanban</mat-icon>
-        <span>Board</span>
-        <span class="nav-count">{{ totalCards() }}</span>
+        <span>Angular Board</span>
       </a>
     </nav>
 
     <div class="sidebar-spacer"></div>
-
-    <section class="sprint-summary" aria-label="Board summary">
-      <div class="sprint-summary-top">
-        <span class="sprint-dot"></span>
-        <span>TABLEAU</span>
-        <span class="sprint-days">{{ columns().length }} lists</span>
-      </div>
-      <strong>{{ totalCards() }} tickets</strong>
-      <div class="sprint-summary-bottom">
-        <span>Data synced</span>
-      </div>
-    </section>
-
     <div class="sidebar-footer">
       <div class="current-user">
         <span class="user-avatar">{{ userInitials() }}</span>
@@ -60,7 +37,9 @@
 
     <!-- Header -->
     <header class="topbar">
-      <div class="breadcrumbs"><span>Workspace</span><mat-icon aria-hidden="true">chevron_right</mat-icon><strong>My board</strong></div>
+
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs"><span>Workspace</span><mat-icon aria-hidden="true">chevron_right</mat-icon><strong>Angular board</strong></div>
       <div class="topbar-actions">
         <label class="search-box">
           <mat-icon aria-hidden="true">search</mat-icon>
@@ -93,7 +72,7 @@
         <div>
           <div class="eyebrow">PERSONAL WORKSPACE <span>/</span> KANBAN</div>
           <div class="title-row">
-            <h1 id="board-title">My board</h1>
+            <h1 id="board-title">Angular board</h1>
             <span class="board-private"><mat-icon aria-hidden="true">lock</mat-icon> Private</span>
           </div>
           <p class="board-description">Organize tickets into lists and track their progress.</p>
@@ -128,18 +107,65 @@
       }
 
       @if (showIssueForm()) {
-        <form class="creation-panel" (submit)="createCard($event, cardTitle.value, cardDescription.value, targetList.value, cardTitle, cardDescription)">
+        <form
+          class="creation-panel"
+          (submit)="submitCardForm(
+            $event,
+            cardTitle.value,
+            cardDescription.value,
+            targetList.value,
+            cardTitle,
+            cardDescription
+          )"
+        >
           <label for="new-card-title">Ticket title</label>
-          <input #cardTitle id="new-card-title" required maxlength="200" placeholder="e.g. Add profile page" />
+
+          <input
+            #cardTitle
+            id="new-card-title"
+            required
+            maxlength="200"
+            placeholder="e.g. Add profile page"
+            [value]="editingCard()?.title ?? ''"
+          />
+
           <label for="new-card-description">Description (optional)</label>
-          <textarea #cardDescription id="new-card-description" rows="2" placeholder="Ticket details"></textarea>
+
+          <textarea
+            #cardDescription
+            id="new-card-description"
+            rows="2"
+            placeholder="Ticket details"
+          >{{ editingCard()?.description ?? '' }}</textarea>
+
           <label for="target-list">List</label>
-          <select #targetList id="target-list" required>
+
+          <select
+            #targetList
+            id="target-list"
+            required
+            [value]="editingCard()?.listId ?? columns()[0]?.id"
+          >
             @for (column of columns(); track column.id) {
-              <option [value]="column.id">{{ column.title }}</option>
+              <option [value]="column.id">
+                {{ column.title }}
+              </option>
             }
           </select>
-          <button mat-flat-button type="submit" class="create-button">Add ticket</button>
+
+          <button mat-flat-button type="submit" class="create-button">
+            {{ editingCard() ? 'Update ticket' : 'Add ticket' }}
+          </button>
+
+          @if (editingCard()) {
+            <button
+              mat-button
+              type="button"
+              (click)="cancelEditCard()"
+            >
+              Cancel
+            </button>
+          }
         </form>
       }
 
@@ -223,6 +249,7 @@
                     cdkDrag
                     [card]="card"
                     [cdkDragDisabled]="searchQuery().trim().length > 0"
+                    (updateCard)="startEditCard($event)"
                     (deleteCard)="askDeleteCard(card)"
                   />
                 } @empty {
