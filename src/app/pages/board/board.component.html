@@ -2,7 +2,7 @@
 
     <!-- SIDEBAR -->
   <aside class="sidebar" aria-label="Navigation du projet">
-    <a class="brand" href="/home" aria-label="Accueil Kanban">
+    <a class="brand" href="/board" aria-label="Kanban home">
       <span class="brand-mark"><mat-icon>view_kanban</mat-icon></span>
       <span class="brand-name">Kanban<span>.</span></span>
     </a>
@@ -16,13 +16,13 @@
       <mat-icon aria-hidden="true">unfold_more</mat-icon>
     </div>
 
-    <div class="sidebar-section-label">TABLEAU</div>
+    <div class="sidebar-section-label">BOARD</div>
     <div class="project-row">
       <span class="project-mark">K</span>
       <span>My lists</span>
     </div>
-    <nav class="project-nav" aria-label="Vues du tableau">
-      <a class="nav-item is-active" href="/home" aria-current="page">
+    <nav class="project-nav" aria-label="Board views">
+      <a class="nav-item is-active" href="/board" aria-current="page">
         <mat-icon aria-hidden="true">view_kanban</mat-icon>
         <span>Board</span>
         <span class="nav-count">{{ totalCards() }}</span>
@@ -31,7 +31,7 @@
 
     <div class="sidebar-spacer"></div>
 
-    <section class="sprint-summary" aria-label="Résumé du tableau">
+    <section class="sprint-summary" aria-label="Board summary">
       <div class="sprint-summary-top">
         <span class="sprint-dot"></span>
         <span>TABLEAU</span>
@@ -96,7 +96,7 @@
       </div>
 
       <div class="board-toolbar">
-        <div class="view-switch" aria-label="Vue du tableau">
+        <div class="view-switch" aria-label="Board view">
           <span class="view-option is-selected"><mat-icon aria-hidden="true">view_kanban</mat-icon> Board</span>
         </div>
         <div class="toolbar-right">
@@ -140,7 +140,7 @@
       }
 
       @if (loading()) {
-        <div class="empty-board" role="status">Chargement du tableau…</div>
+        <div class="empty-board" role="status">Loading board…</div>
       } @else if (boardError()) {
         <div class="empty-board" role="alert">{{ boardError() }}</div>
       } @else if (columns().length === 0) {
@@ -150,7 +150,7 @@
           <button mat-flat-button type="button" class="create-button" (click)="toggleListForm()">Create a list</button>
         </div>
       } @else {
-        <div class="board-columns" cdkDropListGroup aria-label="Tableau Kanban">
+        <div class="board-columns" cdkDropListGroup aria-label="Kanban board">
           @for (column of visibleColumns(); track column.id) {
             <section
               class="board-column"
@@ -211,18 +211,12 @@
 
               <div class="column-body">
                 @for (card of column.cards; track card.id) {
-                  <article class="issue-card" cdkDrag [cdkDragDisabled]="searchQuery().trim().length > 0">
-                    <div class="issue-card-top">
-                      <span class="issue-key">#{{ card.id }}</span>
-                      <button class="card-delete" type="button" [attr.aria-label]="'Delete ticket ' + card.title" (click)="deleteCard(card)">
-                        <mat-icon aria-hidden="true">close</mat-icon>
-                      </button>
-                    </div>
-                    <h3>{{ card.title }}</h3>
-                    @if (card.description) {
-                      <p class="issue-description">{{ card.description }}</p>
-                    }
-                  </article>
+                  <app-board-card
+                    cdkDrag
+                    [card]="card"
+                    [cdkDragDisabled]="searchQuery().trim().length > 0"
+                    (deleteCard)="deleteCard($event)"
+                  />
                 } @empty {
                   <div class="empty-column">No tickets in this list</div>
                 }
