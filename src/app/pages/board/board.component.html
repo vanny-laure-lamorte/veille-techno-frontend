@@ -75,6 +75,14 @@
         </label>
         <div class="topbar-divider"></div>
         <div class="topbar-avatar" [attr.aria-label]="currentUserName()">{{ userInitials() }}</div>
+        <div class="user-info">
+          <span class="user-name"><b>{{ currentUserName() }}</b></span>
+          <div class="user-details">
+            <span>Email — {{ currentUserEmail() }}</span>
+            <span>Role — {{ currentUserRole() }}</span>
+            <span>Joined — {{ userCreatedAt() }}</span>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -215,7 +223,7 @@
                     cdkDrag
                     [card]="card"
                     [cdkDragDisabled]="searchQuery().trim().length > 0"
-                    (deleteCard)="askDeleteCard($event)"
+                    (deleteCard)="askDeleteCard(card)"
                   />
                 } @empty {
                   <div class="empty-column">No tickets in this list</div>
@@ -234,6 +242,17 @@
                 />
               }
             </section>
+            @if (cardToDelete()?.id) {
+              <app-confirm-dialog
+                [title]="'Delete ticket?'"
+                [message]="'Are you sure you want to delete &quot;' + cardToDelete()?.title + '&quot;?'"
+                [icon]="'delete_outline'"
+                [confirmText]="'Delete'"
+                [cancelText]="'Cancel'"
+                (confirmed)="confirmDeleteCard()"
+                (cancelled)="cancelDeleteCard()"
+              />
+            }
           }
         </div>
       }

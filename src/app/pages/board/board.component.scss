@@ -272,6 +272,25 @@ a {
 	gap: 9px;
 }
 
+.user-info {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2px;
+	border-radius: 5px;
+	font-size: 11px;
+	border: 1px solid kanban.$board-line-dark;
+	padding: 8px 20px;
+}
+
+.user-details {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	gap: 6px;
+	margin-top: 4px;
+}
+
 .user-avatar,
 .topbar-avatar {
 	display: grid;

@@ -60,6 +60,9 @@ export class BoardComponent implements OnInit {
   readonly showListForm = signal(false);
   readonly showIssueForm = signal(false);
   readonly currentUserName = signal('My account');
+  readonly currentUserEmail = signal('My email');
+  readonly currentUserRole = signal('My role');
+  readonly userCreatedAt = signal('Joined');
   readonly listToDelete = signal<BoardColumn | null>(null);
   readonly cardToDelete = signal<KanbanCard | null>(null);
 
@@ -76,6 +79,20 @@ export class BoardComponent implements OnInit {
         .map((part) => part.charAt(0))
         .join('')
         .toLocaleUpperCase() || 'U',
+  );
+
+  readonly userRole = computed(
+    () =>
+      this.currentUserRole()
+        .trim()
+        .split(/\s+/)
+  );
+
+  readonly userEmail = computed(
+    () =>
+      this.currentUserEmail()
+        .trim()
+        .split(/\s+/)
   );
 
   readonly visibleColumns = computed(() => {
@@ -95,8 +112,16 @@ export class BoardComponent implements OnInit {
   ngOnInit(): void {
     this.loadBoard();
     this.authService.getCurrentUser().subscribe({
-      next: (user) => this.currentUserName.set(user.name || user.email),
-      error: () => this.currentUserName.set('My account'),
+      next: (user) => {
+        this.currentUserName.set(user.name);
+        this.currentUserEmail.set(user.email);
+        this.currentUserRole.set(user.role);
+        this.userCreatedAt.set(new Date(user.createdAt).toLocaleDateString());
+      },
+    error: () => {
+        this.currentUserName.set('My account');
+        this.currentUserRole.set('My role');
+      },
     });
   }
 
