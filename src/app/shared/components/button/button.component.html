@@ -1,0 +1,13 @@
+<button
+  class="btn"
+  [class.btn-primary]="variant() === 'primary'"
+  [class.btn-secondary]="variant() === 'secondary'"
+  [class.btn-tertiary]="variant() === 'tertiary'"
+  [class.btn-ghost]="variant() === 'ghost'"
+  [class.btn-inline]="!fullWidth()"
+  [type]="type()"
+  [disabled]="disabled()"
+  (click)="clicked.emit($event)"
+>
+  <ng-content />
+</button>

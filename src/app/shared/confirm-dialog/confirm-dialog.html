@@ -1,37 +1,18 @@
-<div class="confirm-dialog">
-  <div class="confirm-dialog-content">
-
-    <!-- Icon -->
-    @if (icon()) {
-      <div class="confirm-dialog-icon">
-        <mat-icon>{{ icon() }}</mat-icon>
-      </div>
-    }
-
-    <!-- Title and message -->
-    <h2>{{ title() }}</h2>
-    <p>{{ message() }}</p>
-
-    <!-- Cancel and delete btn -->
-    <div class="confirm-dialog-actions">
-      <button
-        mat-button
-        type="button"
-        class="btn btn-ghost"
-        (click)="onCancel()"
-      >
-        {{ cancelText() }}
-      </button>
-
-      <button
-        mat-flat-button
-        type="button"
-        class="btn btn-primary"
-        (click)="onConfirm()"
-      >
-        {{ confirmText() }}
-      </button>
+<app-modal [open]="true" [title]="title()" (closed)="onCancel()">
+  @if (icon()) {
+    <div class="confirm-dialog-icon">
+      <mat-icon aria-hidden="true">{{ icon() }}</mat-icon>
     </div>
+  }
 
+  <p>{{ message() }}</p>
+
+  <div modal-actions>
+    <app-button variant="ghost" (clicked)="onCancel()">
+      {{ cancelText() }}
+    </app-button>
+    <app-button variant="primary" (clicked)="onConfirm()">
+      {{ confirmText() }}
+    </app-button>
   </div>
-</div>
+</app-modal>

@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { KanbanCard } from '../../core/card.service';
+import { CardComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-board-card',
-  imports: [MatIconModule],
+  imports: [CardComponent, MatIconModule],
   templateUrl: './board-card.component.html',
   styleUrl: './board-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

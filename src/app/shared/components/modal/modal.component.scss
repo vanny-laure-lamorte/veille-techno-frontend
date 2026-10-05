@@ -1,0 +1,72 @@
+:host {
+  display: contents;
+}
+
+.modal-dialog {
+  width: min(420px, calc(100vw - 32px));
+  max-width: none;
+  max-height: min(80dvh, 720px);
+  padding: 0;
+  overflow: auto;
+  color: #27352d;
+  background: transparent;
+  border: 0;
+}
+
+.modal-dialog::backdrop {
+  background: rgb(18 35 26 / 48%);
+  backdrop-filter: blur(2px);
+}
+
+.modal-surface {
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #e5eae6;
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgb(12 31 20 / 24%);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.modal-close {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #617067;
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  color: #263a2e;
+  background: #edf3ee;
+}
+
+.modal-body {
+  color: #637168;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}

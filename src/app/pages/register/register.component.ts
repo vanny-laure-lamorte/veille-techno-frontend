@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../core/auth.service';
+import { ButtonComponent, CardComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-register',
@@ -15,6 +16,8 @@ import { AuthService } from '../../core/auth.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    ButtonComponent,
+    CardComponent,
   ],
   templateUrl: './register.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

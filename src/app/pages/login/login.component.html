@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-card class="card">
+  <app-card class="card" variant="auth">
     <mat-card-header class="header">
       <mat-card-title class="title">Welcome back</mat-card-title>
       <mat-card-subtitle class="subtitle">Sign in to continue to your account</mat-card-subtitle>
@@ -57,28 +57,19 @@
           <p class="error">{{ errorMessage() }}</p>
         }
 
-        <button
-          mat-flat-button
-          type="submit"
-          class="btn btn-primary"
-        >
+        <app-button type="submit" variant="primary" [fullWidth]="true">
           Sign in
-        </button>
+        </app-button>
 
           <div class="actions">
             <span>Don't have an account?</span>
 
-            <button
-            mat-button
-            type="button"
-            class="link btn btn-secondary"
-            (click)="onRegister()"
-            >
+            <app-button variant="secondary" [fullWidth]="true" (clicked)="onRegister()">
             Create account
-            </button>
+            </app-button>
         </div>
       </form>
     </mat-card-content>
-  </mat-card>
+  </app-card>
 </div>
 

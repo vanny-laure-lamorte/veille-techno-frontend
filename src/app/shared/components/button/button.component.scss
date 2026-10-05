@@ -1,0 +1,14 @@
+:host {
+  display: inline-block;
+}
+
+:host(.app-button--full-width) {
+  display: block;
+  width: 100%;
+}
+
+button.btn-inline {
+  width: auto;
+  min-width: 72px;
+  margin: 0;
+}
