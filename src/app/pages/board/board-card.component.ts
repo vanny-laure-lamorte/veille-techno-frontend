@@ -12,4 +12,5 @@ import { KanbanCard } from '../../core/card.service';
 export class BoardCardComponent {
   readonly card = input.required<KanbanCard>();
   readonly deleteCard = output<KanbanCard>();
+  readonly updateCard = output<KanbanCard>();
 }
