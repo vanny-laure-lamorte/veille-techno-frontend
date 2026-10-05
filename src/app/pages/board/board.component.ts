@@ -23,7 +23,7 @@ import { CardService, KanbanCard } from '../../core/card.service';
 import { KanbanList, ListService, ResourceId } from '../../core/list.services';
 import { BoardCardComponent } from './board-card.component';
 import { MatInputModule } from '@angular/material/input';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog';
+import { ConfirmDialogComponent } from '../../shared/components';
 
 interface BoardColumn extends KanbanList {
   cards: KanbanCard[];

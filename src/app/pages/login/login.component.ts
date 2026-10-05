@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../core/auth.service';
+import { ButtonComponent, CardComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,8 @@ import { AuthService } from '../../core/auth.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    ButtonComponent,
+    CardComponent,
   ],
   templateUrl: './login.component.html',
 })
